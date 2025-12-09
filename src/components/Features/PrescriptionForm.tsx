@@ -26,7 +26,7 @@ const PrescriptionForm: React.FC<PrescriptionFormProps> = ({
   const [selectedPatient, setSelectedPatient] = useState<string>(patientId || '');
   const [diagnosis, setDiagnosis] = useState('');
   const [instructions, setInstructions] = useState('');
-  const [medications, setMedications] = useState<any[]>([]);
+  const [medications, setMedications] = useState<unknown[]>([]);
   const [newMedication, setNewMedication] = useState({
     name: '',
     dosage: '',
