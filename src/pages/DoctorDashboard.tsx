@@ -10,7 +10,8 @@ import {
   PlusCircle,
   Activity,
   Search,
-  Filter
+  Filter,
+  Stethoscope
 } from 'lucide-react';
 import PrescriptionForm from '../components/Features/PrescriptionForm';
 import AppointmentList from '../components/Features/AppointmentList';
