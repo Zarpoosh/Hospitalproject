@@ -12,6 +12,28 @@ export interface User {
   phone?: string;
 }
 
+
+
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface LoginCredentials {
+  username: string;
+  password: string;
+  rememberMe?: boolean;
+}
+
+export interface LoginResponse {
+  user: User;
+  token: string;
+  expiresIn: number;
+}
+
+
 // نوع پزشک
 export interface Doctor {
   id: string;
