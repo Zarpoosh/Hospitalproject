@@ -13,6 +13,7 @@ import TimeSelector from '../components/Patient/TimeSelector';
 import BookingStep from '../components/Patient/BookingStep';
 import BookingSummary from '../components/Patient/BookingSummary';
 
+
 const PatientDashboard: React.FC = () => {
   const {
     activeTab,
