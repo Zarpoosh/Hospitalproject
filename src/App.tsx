@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { DarkModeProvider } from './contexts/DarkModeContext';
 import Login from './pages/Login';
 import DoctorDashboard from './pages/DoctorDashboard';
 import PatientDashboard from './pages/PatientDashboard';
@@ -74,9 +75,10 @@ class ErrorBoundary extends React.Component<
 function App() {
   return (
     <ErrorBoundary>
-      <Router>
-        <div className="min-h-screen bg-gray-50">
-          <Routes>
+      <DarkModeProvider>
+        <Router>
+          <div className="min-h-screen bg-white dark:bg-gray-900">
+            <Routes>
             {/* Public Routes */}
             <Route path="/login" element={<Login />} />
             
@@ -114,9 +116,10 @@ function App() {
             
             {/* 404 */}
             <Route path="*" element={<NotFound />} />
-          </Routes>
-        </div>
-      </Router>
+            </Routes>
+          </div>
+        </Router>
+      </DarkModeProvider>
     </ErrorBoundary>
   );
 }

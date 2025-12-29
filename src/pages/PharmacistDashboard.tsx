@@ -45,7 +45,7 @@ const PharmacistDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Header
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -74,13 +74,13 @@ const PharmacistDashboard: React.FC = () => {
           </div>
 
           {/* Medications Table Section */}
-          <div className="bg-white rounded-2xl shadow">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow dark:shadow-gray-900">
             <TableHeader onAddClick={() => setShowAddModal(true)} />
             
             <div className="p-6">
               {filteredMedications.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-gray-500">دارویی یافت نشد</p>
+                  <p className="text-gray-500 dark:text-gray-400">دارویی یافت نشد</p>
                 </div>
               ) : (
                 <MedicationTable

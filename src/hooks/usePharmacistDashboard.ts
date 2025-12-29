@@ -1,10 +1,10 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { Medication } from '../types';
 import { 
-  generateMockMedications, 
   INITIAL_MEDICATION_FORM 
 } from '../constants/pharmacist';
+import { medicationApi, type Medication as ApiMedication } from '../utils/medicationApi';
 
 interface MedicationForm {
   name: string;
@@ -42,13 +42,46 @@ interface UsePharmacistDashboardReturn {
   };
 }
 
+// تبدیل API Medication به Frontend Medication
+const apiToFrontendMedication = (apiMed: ApiMedication): Medication => ({
+  id: apiMed.id.toString(),
+  name: apiMed.name,
+  genericName: apiMed.genericName || undefined,
+  dosageForm: apiMed.dosageForm,
+  strength: apiMed.strength,
+  manufacturer: apiMed.manufacturer || '',
+  price: apiMed.price || 0,
+  stock: apiMed.stock || 0,
+  description: apiMed.description || undefined,
+});
+
 export const usePharmacistDashboard = (): UsePharmacistDashboardReturn => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingMedication, setEditingMedication] = useState<Medication | null>(null);
   const [medicationForm, setMedicationForm] = useState<MedicationForm>(INITIAL_MEDICATION_FORM);
-  const [medications, setMedications] = useState<Medication[]>(generateMockMedications());
+  const [medications, setMedications] = useState<Medication[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  // بارگذاری داروها از API
+  useEffect(() => {
+    loadMedications();
+  }, []);
+
+  const loadMedications = useCallback(async () => {
+    try {
+      setLoading(true);
+      const apiMedications = await medicationApi.getAll();
+      const frontendMedications = apiMedications.map(apiToFrontendMedication);
+      setMedications(frontendMedications);
+    } catch (error) {
+      console.error('Error loading medications:', error);
+      alert('خطا در بارگذاری داروها');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   const filteredMedications = useMemo(() => {
     if (!searchTerm.trim()) return medications;
@@ -62,9 +95,9 @@ export const usePharmacistDashboard = (): UsePharmacistDashboardReturn => {
   }, [medications, searchTerm]);
 
   const stats = useMemo(() => {
-    const totalStock = medications.reduce((sum, med) => sum + med.stock, 0);
-    const lowStockCount = medications.filter(med => med.stock < 20).length;
-    const totalValue = medications.reduce((sum, med) => sum + (med.price * med.stock), 0);
+    const totalStock = medications.reduce((sum, med) => sum + (med.stock || 0), 0);
+    const lowStockCount = medications.filter(med => (med.stock || 0) < 20).length;
+    const totalValue = medications.reduce((sum, med) => sum + ((med.price || 0) * (med.stock || 0)), 0);
     
     return {
       totalMedications: medications.length,
@@ -100,25 +133,30 @@ export const usePharmacistDashboard = (): UsePharmacistDashboardReturn => {
     return true;
   }, [medicationForm]);
 
-  const handleAddMedication = useCallback(() => {
+  const handleAddMedication = useCallback(async () => {
     if (!validateMedicationForm()) return;
 
-    const newMedication: Medication = {
-      id: Date.now().toString(),
-      name: medicationForm.name,
-      genericName: medicationForm.genericName || undefined,
-      dosageForm: medicationForm.dosageForm,
-      strength: medicationForm.strength,
-      manufacturer: medicationForm.manufacturer,
-      price: parseInt(medicationForm.price) || 0,
-      stock: parseInt(medicationForm.stock) || 0,
-      description: medicationForm.description || undefined,
-    };
+    try {
+      const newMedication = await medicationApi.create({
+        name: medicationForm.name,
+        genericName: medicationForm.genericName || undefined,
+        dosageForm: medicationForm.dosageForm,
+        strength: medicationForm.strength,
+        manufacturer: medicationForm.manufacturer || undefined,
+        price: medicationForm.price ? parseInt(medicationForm.price) : undefined,
+        stock: medicationForm.stock ? parseInt(medicationForm.stock) : undefined,
+        description: medicationForm.description || undefined,
+      });
 
-    setMedications(prev => [...prev, newMedication]);
-    resetMedicationForm();
-    setShowAddModal(false);
-    alert('دارو با موفقیت اضافه شد');
+      const frontendMedication = apiToFrontendMedication(newMedication);
+      setMedications(prev => [frontendMedication, ...prev]);
+      resetMedicationForm();
+      setShowAddModal(false);
+      alert('دارو با موفقیت اضافه شد');
+    } catch (error) {
+      console.error('Error adding medication:', error);
+      alert('خطا در اضافه کردن دارو');
+    }
   }, [medicationForm, validateMedicationForm, resetMedicationForm]);
 
   const handleEditMedication = useCallback((medication: Medication) => {
@@ -136,34 +174,47 @@ export const usePharmacistDashboard = (): UsePharmacistDashboardReturn => {
     setShowAddModal(true);
   }, []);
 
-  const handleUpdateMedication = useCallback(() => {
+  const handleUpdateMedication = useCallback(async () => {
     if (!editingMedication || !validateMedicationForm()) return;
 
-    const updatedMedication: Medication = {
-      ...editingMedication,
-      name: medicationForm.name,
-      genericName: medicationForm.genericName || undefined,
-      dosageForm: medicationForm.dosageForm,
-      strength: medicationForm.strength,
-      manufacturer: medicationForm.manufacturer,
-      price: parseInt(medicationForm.price) || 0,
-      stock: parseInt(medicationForm.stock) || 0,
-      description: medicationForm.description || undefined,
-    };
+    try {
+      const medicationId = parseInt(editingMedication.id);
+      const updatedMedication = await medicationApi.update(medicationId, {
+        name: medicationForm.name,
+        genericName: medicationForm.genericName || undefined,
+        dosageForm: medicationForm.dosageForm,
+        strength: medicationForm.strength,
+        manufacturer: medicationForm.manufacturer || undefined,
+        price: medicationForm.price ? parseInt(medicationForm.price) : undefined,
+        stock: medicationForm.stock ? parseInt(medicationForm.stock) : undefined,
+        description: medicationForm.description || undefined,
+      });
 
-    setMedications(prev => 
-      prev.map(m => m.id === editingMedication.id ? updatedMedication : m)
-    );
-    
-    resetMedicationForm();
-    setShowAddModal(false);
-    alert('دارو با موفقیت به‌روزرسانی شد');
+      const frontendMedication = apiToFrontendMedication(updatedMedication);
+      setMedications(prev => 
+        prev.map(m => m.id === editingMedication.id ? frontendMedication : m)
+      );
+      
+      resetMedicationForm();
+      setShowAddModal(false);
+      alert('دارو با موفقیت به‌روزرسانی شد');
+    } catch (error) {
+      console.error('Error updating medication:', error);
+      alert('خطا در به‌روزرسانی دارو');
+    }
   }, [editingMedication, medicationForm, validateMedicationForm, resetMedicationForm]);
 
-  const handleDeleteMedication = useCallback((id: string) => {
-    if (window.confirm('آیا از حذف این دارو مطمئن هستید؟')) {
+  const handleDeleteMedication = useCallback(async (id: string) => {
+    if (!window.confirm('آیا از حذف این دارو مطمئن هستید؟')) return;
+
+    try {
+      const medicationId = parseInt(id);
+      await medicationApi.delete(medicationId);
       setMedications(prev => prev.filter(m => m.id !== id));
       alert('دارو با موفقیت حذف شد');
+    } catch (error) {
+      console.error('Error deleting medication:', error);
+      alert('خطا در حذف دارو');
     }
   }, []);
 

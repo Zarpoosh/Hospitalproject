@@ -24,24 +24,30 @@ export const APPOINTMENT_STATUS_COLORS = {
 export const BOOKING_STEPS = [
   {
     step: 1,
-    label: 'انتخاب پزشک',
+    label: 'انتخاب تخصص',
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
   },
   {
     step: 2,
-    label: 'انتخاب تاریخ',
+    label: 'انتخاب پزشک',
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
   },
   {
     step: 3,
-    label: 'انتخاب زمان',
+    label: 'انتخاب تاریخ',
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
   },
   {
     step: 4,
+    label: 'انتخاب زمان',
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-100',
+  },
+  {
+    step: 5,
     label: 'تکمیل اطلاعات',
     color: 'text-blue-600',
     bgColor: 'bg-blue-100',
@@ -54,7 +60,21 @@ export const TIME_SLOTS = [
   '16:00', '16:30', '17:00',
 ] as const;
 
+// لیست تخصص‌ها
+export const SPECIALIZATIONS = [
+  'متخصص داخلی',
+  'متخصص زنان',
+  'متخصص قلب',
+  'متخصص اطفال',
+  'متخصص چشم',
+  'متخصص پوست',
+  'متخصص ارتوپدی',
+  'متخصص مغز و اعصاب',
+] as const;
+
+// تولید لیست کامل دکترها
 export const generateMockDoctors = (): Doctor[] => [
+  // متخصص داخلی
   {
     id: 'd1',
     userId: 'ud1',
@@ -67,13 +87,124 @@ export const generateMockDoctors = (): Doctor[] => [
   {
     id: 'd2',
     userId: 'ud2',
+    name: 'دکتر احمد رضایی',
+    specialization: 'متخصص داخلی',
+    availableDays: ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه'],
+    availableHours: ['09:00', '10:00', '11:00', '14:00', '15:00', '16:00'],
+    consultationFee: 160000,
+  },
+  {
+    id: 'd3',
+    userId: 'ud3',
+    name: 'دکتر مریم حسینی',
+    specialization: 'متخصص داخلی',
+    availableDays: ['شنبه', 'یکشنبه', 'چهارشنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '15:00', '16:00'],
+    consultationFee: 145000,
+  },
+  // متخصص زنان
+  {
+    id: 'd4',
+    userId: 'ud4',
     name: 'دکتر فاطمه کریمی',
     specialization: 'متخصص زنان',
     availableDays: ['شنبه', 'یکشنبه', 'دوشنبه'],
     availableHours: ['09:00', '10:00', '11:00', '15:00', '16:00'],
     consultationFee: 180000,
   },
+  {
+    id: 'd5',
+    userId: 'ud5',
+    name: 'دکتر زهرا احمدی',
+    specialization: 'متخصص زنان',
+    availableDays: ['دوشنبه', 'سه‌شنبه', 'چهارشنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '14:00', '15:00'],
+    consultationFee: 175000,
+  },
+  // متخصص قلب
+  {
+    id: 'd6',
+    userId: 'ud6',
+    name: 'دکتر محمود نوری',
+    specialization: 'متخصص قلب',
+    availableDays: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '11:00', '14:00'],
+    consultationFee: 200000,
+  },
+  {
+    id: 'd7',
+    userId: 'ud7',
+    name: 'دکتر سعید امینی',
+    specialization: 'متخصص قلب',
+    availableDays: ['یکشنبه', 'دوشنبه', 'چهارشنبه'],
+    availableHours: ['09:00', '10:00', '11:00', '15:00', '16:00'],
+    consultationFee: 195000,
+  },
+  // متخصص اطفال
+  {
+    id: 'd8',
+    userId: 'ud8',
+    name: 'دکتر لیلا موسوی',
+    specialization: 'متخصص اطفال',
+    availableDays: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '11:00', '14:00', '15:00'],
+    consultationFee: 170000,
+  },
+  {
+    id: 'd9',
+    userId: 'ud9',
+    name: 'دکتر رضا صادقی',
+    specialization: 'متخصص اطفال',
+    availableDays: ['دوشنبه', 'سه‌شنبه', 'چهارشنبه'],
+    availableHours: ['09:00', '10:00', '11:00', '14:00', '15:00'],
+    consultationFee: 165000,
+  },
+  // متخصص چشم
+  {
+    id: 'd10',
+    userId: 'ud10',
+    name: 'دکتر حسن کاظمی',
+    specialization: 'متخصص چشم',
+    availableDays: ['شنبه', 'یکشنبه', 'دوشنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '14:00', '15:00', '16:00'],
+    consultationFee: 190000,
+  },
+  // متخصص پوست
+  {
+    id: 'd11',
+    userId: 'ud11',
+    name: 'دکتر نرگس رحمانی',
+    specialization: 'متخصص پوست',
+    availableDays: ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه'],
+    availableHours: ['09:00', '10:00', '11:00', '14:00', '15:00'],
+    consultationFee: 185000,
+  },
+  // متخصص ارتوپدی
+  {
+    id: 'd12',
+    userId: 'ud12',
+    name: 'دکتر مهدی قاسمی',
+    specialization: 'متخصص ارتوپدی',
+    availableDays: ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه'],
+    availableHours: ['08:00', '09:00', '10:00', '11:00', '14:00'],
+    consultationFee: 210000,
+  },
+  // متخصص مغز و اعصاب
+  {
+    id: 'd13',
+    userId: 'ud13',
+    name: 'دکتر سارا فرهادی',
+    specialization: 'متخصص مغز و اعصاب',
+    availableDays: ['دوشنبه', 'سه‌شنبه', 'چهارشنبه'],
+    availableHours: ['09:00', '10:00', '11:00', '15:00', '16:00'],
+    consultationFee: 220000,
+  },
 ];
+
+// تابع برای دریافت دکترهای یک تخصص
+export const getDoctorsBySpecialization = (specialization: string, doctors: Doctor[]): Doctor[] => {
+  return doctors.filter(doctor => doctor.specialization === specialization);
+};
 
 export const generateMockAppointments = (patientId: string): Appointment[] => [
   {
