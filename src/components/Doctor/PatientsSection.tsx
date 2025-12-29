@@ -15,10 +15,10 @@ const PatientsSection: React.FC<PatientsSectionProps> = ({
   onPrescribe,
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow">
-      <div className="p-6 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 flex items-center">
-          <Users className="w-6 h-6 ml-2 text-blue-600" />
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow dark:shadow-gray-900">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
+          <Users className="w-6 h-6 ml-2 text-blue-600 dark:text-blue-400" />
           لیست بیماران
         </h2>
       </div>

@@ -26,13 +26,13 @@ const Sidebar: React.FC<SidebarProps> = ({
   todayAppointments,
 }) => {
   return (
-    <aside className="w-64 bg-white shadow-lg min-h-[calc(100vh-80px)] hidden md:block">
+    <aside className="w-64 bg-white dark:bg-gray-800 shadow-lg dark:shadow-gray-900 min-h-[calc(100vh-80px)] hidden md:block">
       <nav className="p-6">
         <div className="space-y-6">
-          <div className="p-4 bg-blue-50 rounded-xl">
-            <h3 className="font-medium text-blue-700 mb-2">امروز</h3>
-            <p className="text-2xl font-bold">{new Date().toLocaleDateString('fa-IR')}</p>
-            <p className="text-sm text-blue-600 mt-1">{todayAppointments} قرار ملاقات</p>
+          <div className="p-4 bg-blue-50 dark:bg-blue-900/30 rounded-xl">
+            <h3 className="font-medium text-blue-700 dark:text-blue-300 mb-2">امروز</h3>
+            <p className="text-2xl font-bold dark:text-gray-100">{new Date().toLocaleDateString('fa-IR')}</p>
+            <p className="text-sm text-blue-600 dark:text-blue-400 mt-1">{todayAppointments} قرار ملاقات</p>
           </div>
           
           <div className="space-y-2">
@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       ? `${item.bgColor} ${item.color}`
                       : item.action
                       ? `hover:${item.bgColor} ${item.color}`
-                      : 'hover:bg-gray-100 text-gray-700'
+                      : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
                   }`}
                   aria-current={isActive ? 'page' : undefined}
                 >

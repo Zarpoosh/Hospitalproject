@@ -24,9 +24,9 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow">
-      <div className="p-6 border-b">
-        <h2 className="text-xl font-bold text-gray-800">قرارهای ملاقات من</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow dark:shadow-gray-900">
+      <div className="p-6 border-b dark:border-gray-700">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">قرارهای ملاقات من</h2>
       </div>
       <div className="p-6">
         <div className="space-y-4">
