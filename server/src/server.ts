@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import medicationRoutes from './routes/medications';
+import doctorRoutes from './routes/doctors';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 
 // Routes
 app.use('/api/medications', medicationRoutes);
+app.use('/api/doctors', doctorRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
