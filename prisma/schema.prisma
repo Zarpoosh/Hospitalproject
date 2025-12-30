@@ -1,34 +1,157 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
+
+
 
 datasource db {
   provider = "postgresql"
 }
 
+// مدل کاربر - برای احراز هویت
+model User {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  password    String   // در تولید باید hash شود
+  role        String   // patient, doctor, pharmacist, admin
+  name        String
+  email       String?
+  phone       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // روابط
+  patient     Patient?
+  doctor      Doctor?
+  pharmacist  Pharmacist?
+  admin       Admin?
+}
 
+// مدل بیمار
+model Patient {
+  id          Int      @id @default(autoincrement())
+  userId      Int      @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nationalId  String   @unique
+  dateOfBirth DateTime
+  bloodType   String?
+  allergies   String?  // JSON string یا comma separated
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // روابط
+  appointments Appointment[]
+  prescriptions Prescription[]
+}
 
+// مدل پزشک
+model Doctor {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialization  String
+  availableDays   String   // JSON array
+  availableHours  String   // JSON array
+  consultationFee Int      @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // روابط
+  appointments    Appointment[]
+  prescriptions   Prescription[]
+}
+
+// مدل داروساز
+model Pharmacist {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  licenseNo String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل مدیر
+model Admin {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل دارو
 model Medication {
   id            Int      @id @default(autoincrement())
-
   name          String
-  genericName   String?      // اختیاری
-  dosageForm    String       // Tablet, Syrup, Capsule, ...
-  strength      String       // مثال: 500mg
-  manufacturer  String?      // اختیاری
-
-  price         Int?         // تومان
-  stock         Int?         // تعداد موجودی
-
+  genericName   String?
+  dosageForm    String   // Tablet, Syrup, Capsule, ...
+  strength      String   // مثال: 500mg
+  manufacturer  String?
+  price         Int?     // تومان
+  stock         Int?     // تعداد موجودی
   description   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // روابط
+  prescriptionItems PrescriptionItem[]
+}
 
+// مدل قرار ملاقات
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  patientId Int
+  doctorId  Int
+  patient   Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor    Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  date      DateTime
+  time      String
+  status    String   @default("pending") // pending, confirmed, cancelled, completed
+  reason    String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// مدل نسخه
+model Prescription {
+  id          Int      @id @default(autoincrement())
+  patientId   Int
+  doctorId    Int
+  patient     Patient  @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor      Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  date        DateTime @default(now())
+  diagnosis   String
+  instructions String?
+  status      String   @default("pending") // pending, dispensed
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // روابط
+  items       PrescriptionItem[]
+}
+
+// مدل آیتم نسخه
+model PrescriptionItem {
+  id            Int      @id @default(autoincrement())
+  prescriptionId Int
+  prescription  Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  medicationId  Int
+  medication    Medication  @relation(fields: [medicationId], references: [id], onDelete: Cascade)
+  dosage        String
+  frequency     String
+  duration      String
+  notes         String?
+  
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }

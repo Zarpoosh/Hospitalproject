@@ -75,14 +75,14 @@ const MedicationTable: React.FC<MedicationTableProps> = ({
               <td className="py-4 px-4 font-medium">{medication.strength}</td>
               <td className="py-4 px-4">{medication.manufacturer}</td>
               <td className="py-4 px-4">
-                {medication.price.toLocaleString()}
+                {medication.price ? medication.price.toLocaleString() : '---'}
               </td>
               <td className="py-4 px-4">
                 <div className="flex items-center">
-                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStockColor(medication.stock)}`}>
-                    {medication.stock}
+                  <span className={`px-3 py-1 rounded-full text-sm font-medium ${getStockColor(medication.stock || 0)}`}>
+                    {medication.stock ?? '---'}
                   </span>
-                  {medication.stock < 20 && (
+                  {(medication.stock || 0) < 20 && (
                     <span className="mr-2 text-xs text-red-500">کمبود</span>
                   )}
                 </div>
