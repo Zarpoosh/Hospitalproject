@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from 'react';
 import { 
   Pill, 
@@ -414,11 +415,11 @@ const MedicationList: React.FC<MedicationListProps> = ({
               </div>
               <div className="flex items-center space-x-2 space-x-reverse">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-xs text-gray-600">کافی (>100)</span>
+                <span className="text-xs text-gray-600">کافی (100)</span>
                 <div className="w-3 h-3 bg-blue-500 rounded-full ml-2"></div>
                 <span className="text-xs text-gray-600">متوسط (20-100)</span>
                 <div className="w-3 h-3 bg-orange-500 rounded-full ml-2"></div>
-                <span className="text-xs text-gray-600">کمبود (<20)</span>
+                <span className="text-xs text-gray-600">کمبود (20)</span>
               </div>
             </div>
           </div>
