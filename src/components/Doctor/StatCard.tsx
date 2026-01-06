@@ -17,11 +17,11 @@ const StatCard: React.FC<StatCardProps> = ({
   bgColor,
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow p-6 border border-gray-100">
+    <div className="bg-white dark:bg-gray-800 rounded-2xl shadow dark:shadow-gray-900 p-6 border border-gray-100 dark:border-gray-700">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-gray-500 text-sm">{label}</p>
-          <p className="text-3xl font-bold mt-2">{value}</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm">{label}</p>
+          <p className="text-3xl font-bold mt-2 text-gray-800 dark:text-gray-100">{value}</p>
         </div>
         <div className={`p-3 ${bgColor} rounded-xl`}>
           <Icon className={`w-8 h-8 ${color}`} />
